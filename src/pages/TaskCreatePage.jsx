@@ -29,7 +29,15 @@ function TaskCreatePage() {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      const response = await axios.get(`/tasks/${taskId}`);
+
+      setFormValues({
+        titulo: {
+          value: response.data.title,
+          valid: true,
+        },
+      });
+
     } catch (error) {
       console.warn(error);
       Modal.error({
@@ -55,12 +63,32 @@ function TaskCreatePage() {
       const { titulo } = formValues;
 
       if (!titulo?.valid) return;
+    
+      if (taskId) {
+        // editando
+        await axios.patch(`/tasks/${taskId}`, {
+          title: titulo.value,
+        });
+        notification.success({
+          message: 'Tarefa editada com sucesso!',
+        });
+      } else {
+        // cadastrando
+        await axios.post('/tasks', {
+          title: titulo.value,
+        });
+        notification.success({
+          message: 'Tarefa criada com sucesso!',
+        });
+      }
 
-      // TODO: implementar
+
+      navigate('/');
+
     } catch (error) {
       console.warn(error);
       Modal.error({
-        title: 'Não foi cadastrar-se, tente novamente mais tarde.',
+        title: 'Não foi possível cadastrar a tarefa, tente novamente mais tarde.',
       });
     } finally {
       setLoading(false);
