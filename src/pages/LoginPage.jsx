@@ -11,6 +11,7 @@ import Logo from '../assets/logo-db1-group.png';
 import InputText from '../components/InputText';
 import LocalStorageHelper from '../helpers/localstorage-helper';
 import { validateEmail, validatePassword } from '../validatiors/usuarios';
+import Password from 'antd/es/input/Password';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -28,7 +29,17 @@ function LoginPage() {
 
       if (!email?.valid || !senha?.valid) return;
 
-      // TODO: implementar
+      const response = await axios.post('/users/login',{
+        email: email.value,
+        password: senha.value,
+      });
+
+      const { token } = response.data;
+
+      LocalStorageHelper.setToken(token);
+      
+      navigate('/');
+
     } catch (error) {
       console.warn(error);
       const { response } = error;
@@ -60,7 +71,7 @@ function LoginPage() {
       <Row
         justify="center"
       >
-        <Col xs={24} sl={14} md={12} lg={10} xl={8}>
+        <Col xs={24} sm={14} md={12} lg={10} xl={8}>
           <Card style={{ margin: 24 }}>
 
             <div style={{ textAlign: 'center' }}>

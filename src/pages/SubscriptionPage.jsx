@@ -10,6 +10,7 @@ import axios from 'axios';
 import Logo from '../assets/logo-db1-group.png';
 import InputText from '../components/InputText';
 import { validateEmail, validateName, validatePassword } from '../validatiors/usuarios';
+import Password from 'antd/es/input/Password';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -27,11 +28,34 @@ function SubscriptionPage() {
 
       if (!nome?.valid || !email?.valid || !senha?.valid) return;
 
-      // TODO: implementar
+      const response = await axios.post('/users',{
+        name: nome.value,
+        email: email.value,
+        password: senha.value,
+      });
+      // 200 >> Sucesso.
+
+      Modal.success({
+        title: 'Usuário cadastrado com sucesso, faça login para continuar.'
+      });
+
+      navigate('/login');
+
     } catch (error) {
       console.warn(error);
       const { response } = error;
-      // TODO: implementar tratamento de erro
+      // 400 ou 500 >> Erro.
+
+      if(response?.status === 412){
+        Modal.error({
+          title: 'E-mail já cadastrado no banco de dados.'
+        });
+      } else{
+        Modal.error({
+          title: 'Não foi possível cadsatrar o usuário no momento, tente novamente mais tarde.'
+        });
+      }
+
     } finally {
       setLoading(false);
     }
@@ -51,7 +75,7 @@ function SubscriptionPage() {
       <Row
         justify="center"
       >
-        <Col xs={24} sl={14} md={12} lg={10} xl={8}>
+        <Col xs={24} sm={14} md={12} lg={10} xl={8}>
           <Card style={{ margin: 24 }}>
             <div style={{ textAlign: 'center' }}>
               <img

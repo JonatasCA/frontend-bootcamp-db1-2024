@@ -20,7 +20,9 @@ function TaskListPage() {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      const response = await axios.get('/tasks');
+
+      setTasks(response.data);
     } catch (error) {
       console.warn(error);
       Modal.error({
@@ -35,11 +37,18 @@ function TaskListPage() {
     requestTasks();
   }, []);
 
-  const completeTask = async (taskId, concluida) => {
+  const completeTask = async (taskId, concluded) => {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      await axios.put(
+        concluded
+        ? `/tasks/${taskId}/concluded`
+        : `/tasks/${taskId}/pending`,
+      );
+
+      await requestTasks();
+
     } catch (error) {
       console.warn(error);
       Modal.error({
@@ -54,7 +63,9 @@ function TaskListPage() {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      await axios.delete(`/tasks/${taskId}`);
+
+      await requestTasks();
     } catch (error) {
       console.warn(error);
       Modal.error({
@@ -65,12 +76,12 @@ function TaskListPage() {
     }
   };
 
-  const renderCompletedTask = (concluida, task) => (
+  const renderCompletedTask = (concluded, task) => (
     <Button
       onClick={() => {
-        completeTask(task.id, !concluida);
+        completeTask(task.id, !concluded);
       }}
-      icon={concluida ? <CheckOutlined /> : <BorderOutlined />}
+      icon={concluded ? <CheckOutlined /> : <BorderOutlined />}
     />
   );
 
@@ -118,25 +129,25 @@ function TaskListPage() {
               />
               <Column
                 title="Título"
-                dataIndex="titulo"
-                key="titulo"
+                dataIndex="title"
+                key="title"
               />
               <Column
                 title="Criada em"
-                dataIndex="criado_em"
-                key="criado_em"
+                dataIndex="created_at"
+                key="created_at"
                 render={(data) => new Date(data).toLocaleString()}
               />
               <Column
                 title="Atualizada em"
-                dataIndex="atualizado_em"
-                key="atualizado_em"
+                dataIndex="updated_at"
+                key="updated_at"
                 render={(data) => new Date(data).toLocaleString()}
               />
               <Column
                 title="Concluída"
-                dataIndex="concluida"
-                key="concluida"
+                dataIndex="concluded"
+                key="concluded"
                 render={renderCompletedTask}
               />
               <Column
