@@ -43,12 +43,11 @@ function TaskListPage() {
 
       await axios.put(
         concluded
-        ? `/tasks/${taskId}/concluded`
-        : `/tasks/${taskId}/pending`,
+          ? `/tasks/${taskId}/concluded`
+          : `/tasks/${taskId}/pending`,
       );
 
       await requestTasks();
-
     } catch (error) {
       console.warn(error);
       Modal.error({
@@ -69,7 +68,7 @@ function TaskListPage() {
     } catch (error) {
       console.warn(error);
       Modal.error({
-        title: 'Não foi possível remover, tente novamente mais tarde.',
+        title: 'Não foi possível deletar, tente novamente mais tarde.',
       });
     } finally {
       setLoading(false);
@@ -152,7 +151,7 @@ function TaskListPage() {
               />
               <Column
                 title="Ações"
-                key="acoes"
+                key="actions"
                 render={renderActions}
               />
             </Table>
