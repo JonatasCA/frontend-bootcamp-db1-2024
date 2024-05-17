@@ -69,7 +69,7 @@ function TaskListPage() {
     } catch (error) {
       console.warn(error);
       Modal.error({
-        title: 'Não foi possível processar, tente novamente mais tarde.',
+        title: 'Não foi possível remover, tente novamente mais tarde.',
       });
     } finally {
       setLoading(false);
